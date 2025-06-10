@@ -7,12 +7,38 @@
   <title>
     <%= type %> not found
   </title>
+
+  <style>
+    @font-face {
+      font-family: "font";
+      src: url("/font");
+    }
+
+    * {
+      font-family: "font";
+    }
+
+    body {
+      background-color: #212930;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100dvw;
+      height: 100dvh;
+    }
+
+    span {
+      color: #E75A7C;
+      font-size: 10dvh;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>
+  <span>
     <%= type %> not found
-  </h1>
+  </span>
 </body>
 
 </html>
