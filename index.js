@@ -1,6 +1,7 @@
 const fs = require("fs");
 const express = require("express");
 const showdown = require("showdown");
+const compression = require("compression");
 
 const APP = express();
 const PORT = 3000;
@@ -14,6 +15,7 @@ function dateFormatter(date) {
 }
 
 APP.set("view engine", "ejs");
+APP.use(compression());
 
 APP.get("/", (req, res) => {
   const users = fs.readdirSync("data/users");
@@ -22,6 +24,7 @@ APP.get("/", (req, res) => {
 });
 
 APP.get("/font", (req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=31557600");
   res.send(fs.readFileSync("./public/font.ttf"));
 });
 
