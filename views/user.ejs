@@ -13,7 +13,7 @@
     @font-face {
       font-family: "font";
       font-display: swap;
-      src: url("/font");
+      src: url("/font.ttf");
     }
 
     * {
@@ -24,7 +24,9 @@
       background-color: #212930;
       display: flex;
       justify-content: center;
+      align-items: center;
       margin: 0;
+      flex-direction: column;
     }
 
     a {
@@ -72,6 +74,8 @@
       outline: 3px solid #009FB7;
     }
   </style>
+
+  <%- include('partials/md') %>
 </head>
 
 <body>
@@ -88,7 +92,15 @@
         <% }) %>
     </div>
   </div>
-  <%- include('footer') %>
+
+  <% if (about) { %>
+    <div id="content">
+      <span id="title">About</span>
+      <div class="markdown-body"><%- about %></div>
+    </div>
+    <% } %>
+
+      <%- include('partials/footer') %>
 </body>
 
 </html>

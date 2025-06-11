@@ -2,38 +2,84 @@ const fs = require("fs");
 const express = require("express");
 const showdown = require("showdown");
 const compression = require("compression");
+const StatManager = require("./stats_manager.js").StatManager;
+
+// Statistics Manager
+const StatMan = new StatManager("./stats.json");
 
 const APP = express();
 const PORT = 3000;
 
-const converter = new showdown.Converter({ tables: true });
+// Markdown to HTML converter
+const converter = new showdown.Converter({
+  tables: true,
+  tasklists: true,
+  simpleLineBreaks: true,
+  ghMentions: true,
+  ghMentionsLink: "/{u}",
+  openLinksInNewWindow: true,
+  emoji: true,
+  metadata: true,
+});
 
+// Date formatting function
 function dateFormatter(date) {
   let d = new Date(date);
-
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
+// Set EmbeddedJS as view engine
 APP.set("view engine", "ejs");
+
+// Use compression
 APP.use(compression());
+
+// Disable X-Powered-By header
+APP.set("x-powered-by", false);
+
+// Stat saver (also saves server resources :3)
+let oldStats = StatMan.stats.global_visits;
+setInterval(() => {
+  if (StatMan.stats.global_visits != oldStats) {
+    console.log("[STATMAN] Saved stats to disk");
+    StatMan.writeStatsToDisk();
+    oldStats = StatMan.stats.global_visits;
+  }
+}, 1000);
+
+// ----------------------------------------------
+
+// Static files
+
+let fontData = fs.readFileSync(__dirname + "/public/font.ttf");
+console.log("[LOAD] Loaded font file to memory.");
+
+APP.get("/font.ttf", (req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=31557600");
+  res.send(fontData);
+});
+
+let faviconData = fs.readFileSync(__dirname + "/public/icon.ico");
+console.log("[LOAD] Loaded favicon file to memory.");
+
+APP.get("/favicon.ico", (req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=31557600");
+  res.send(faviconData);
+});
+
+// ----------------------------------------------
 
 APP.get("/", (req, res) => {
   const users = fs.readdirSync("data/users");
 
+  StatMan.incrementGlobalVisits();
+
   res.render("index", { users: users });
-});
-
-APP.get("/font", (req, res) => {
-  res.setHeader("Cache-Control", "public, max-age=31557600");
-  res.send(fs.readFileSync("./public/font.ttf"));
-});
-
-APP.get("/favicon.ico", (req, res) => {
-  res.send(fs.readFileSync("./public/icon.ico"));
 });
 
 APP.get("/:user", (req, res) => {
   let files = [];
+  let about;
 
   try {
     files = fs.readdirSync("data/users/" + req.params.user + "/posts");
@@ -42,34 +88,32 @@ APP.get("/:user", (req, res) => {
     return;
   }
 
+  StatMan.incrementUser(req.params.user);
+  StatMan.incrementGlobalVisits();
+
+  try {
+    let d = fs.readFileSync("data/users/" + req.params.user + "/about.md").toString();
+    about = converter.makeHtml(d);
+  } catch {}
+
   let posts = [];
 
   files.forEach((file) => {
     const content = fs.readFileSync("data/users/" + req.params.user + "/posts/" + file).toString();
 
-    let opts = {};
+    converter.makeHtml(content);
 
-    try {
-      const optsData = content.split("---")[1].trim();
-
-      optsData.split("\n").forEach((line) => {
-        const key = line.split([":"])[0].trim();
-        const value = line.split([":"])[1].trim();
-        opts[key] = value;
-      });
-    } catch {
-      opts.title = file.split(".")[0];
-    }
+    let opts = converter.getMetadata();
 
     posts.push({
       user: req.params.user,
-      title: opts.title,
+      title: opts.title || file.split(".")[0],
       description: opts.description,
       url: file.split(".")[0],
     });
   });
 
-  res.render("user", { user: req.params.user, posts: posts });
+  res.render("user", { user: req.params.user, posts: posts, about: converter.makeHtml(about) });
 });
 
 APP.get("/:user/:post_id", (req, res) => {
@@ -84,34 +128,16 @@ APP.get("/:user/:post_id", (req, res) => {
     return;
   }
 
-  let siteData = "";
+  StatMan.incrementPost(req.params.user, req.params.post_id);
+  StatMan.incrementGlobalVisits();
 
-  let opts = {};
+  let convertedData = converter.makeHtml(content);
 
-  try {
-    const optsData = content.split("---")[1].trim();
+  let opts = converter.getMetadata();
 
-    optsData.split("\n").forEach((line) => {
-      const key = line.split([":"])[0].trim();
-      const value = line.split([":"])[1].trim();
-      opts[key] = value;
-    });
-
-    let data = content.split("---");
-    data.reverse();
-    data.pop();
-    data.pop();
-    data.reverse();
-
-    siteData = data.join("---").trim();
-  } catch {
-    opts.title = req.params.post_id;
-    siteData = content;
-  }
-
-  res.render("post", { user: req.params.user, title: opts.title, modify_date: dateFormatter(modifyDate), data: converter.makeHtml(siteData) });
+  res.render("post", { user: req.params.user, title: opts.title || req.params.post_id, modify_date: dateFormatter(modifyDate), data: convertedData });
 });
 
 APP.listen(PORT, () => {
-  console.log(`Blogs listening on port ${PORT}`);
+  console.log(`\n[SYS] Blogs listening on port ${PORT}\n`);
 });

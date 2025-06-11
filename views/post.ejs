@@ -11,7 +11,7 @@
     @font-face {
       font-family: "font";
       font-display: swap;
-      src: url("/font");
+      src: url("/font.ttf");
     }
 
     * {
@@ -65,7 +65,7 @@
       color: #F18F01;
     }
   </style>
-  <%- include('md') %>
+  <%- include('partials/md') %>
 </head>
 
 <body>
@@ -76,7 +76,7 @@
     </span>
     <div class="markdown-body"><%- data %></div>
   </div>
-  <%- include('footer') %>
+  <%- include('partials/footer') %>
 </body>
 
 </html>
