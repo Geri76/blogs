@@ -2,6 +2,7 @@ const fs = require("fs");
 const express = require("express");
 const showdown = require("showdown");
 const compression = require("compression");
+const path = require("path");
 const StatManager = require("./stats_manager.js").StatManager;
 
 // Statistics Manager
@@ -70,7 +71,7 @@ APP.get("/favicon.ico", (req, res) => {
 // ----------------------------------------------
 
 APP.get("/", (req, res) => {
-  const users = fs.readdirSync("data/users");
+  const users = fs.readdirSync(path.resolve(__dirname, "data", "users"));
 
   StatMan.incrementGlobalVisits();
 
@@ -82,7 +83,7 @@ APP.get("/:user", (req, res) => {
   let about;
 
   try {
-    files = fs.readdirSync("data/users/" + req.params.user + "/posts");
+    files = fs.readdirSync(path.resolve(__dirname, "data", "users", req.params.user, "posts"));
   } catch {
     res.status(404).render("not_found", { type: "user" });
     return;
@@ -92,14 +93,14 @@ APP.get("/:user", (req, res) => {
   StatMan.incrementGlobalVisits();
 
   try {
-    let d = fs.readFileSync("data/users/" + req.params.user + "/about.md").toString();
+    let d = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "about.md")).toString();
     about = converter.makeHtml(d);
   } catch {}
 
   let posts = [];
 
   files.forEach((file) => {
-    const content = fs.readFileSync("data/users/" + req.params.user + "/posts/" + file).toString();
+    const content = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", file)).toString();
 
     converter.makeHtml(content);
 
@@ -117,12 +118,17 @@ APP.get("/:user", (req, res) => {
 });
 
 APP.get("/:user/:post_id", (req, res) => {
+  if ((!/^[A-Za-z0-9]+$/.test(req.params.user), !/^[A-Za-z0-9]+$/.test(req.params.post_id))) {
+    res.status(404).render("not_found", { type: "user" });
+    return;
+  }
+
   let content = "";
   let modifyDate;
 
   try {
-    content = fs.readFileSync("data/users/" + req.params.user + "/posts/" + req.params.post_id + ".md").toString();
-    modifyDate = fs.statSync("data/users/" + req.params.user + "/posts/" + req.params.post_id + ".md").mtime;
+    content = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", req.params.post_id + ".md")).toString();
+    modifyDate = fs.statSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", req.params.post_id + ".md")).mtime;
   } catch {
     res.status(404).render("not_found", { type: "post" });
     return;
