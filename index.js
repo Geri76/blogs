@@ -111,8 +111,6 @@ APP.get("/:user", (req, res) => {
   StatMan.incrementUser(req.params.user);
   StatMan.incrementGlobalVisits();
 
-  console.log(files);
-
   try {
     let d = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "about.md")).toString();
     about = converter.makeHtml(d);
