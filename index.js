@@ -53,29 +53,31 @@ setInterval(() => {
 
 // Static files
 
-let fontData = fs.readFileSync(__dirname + "/public/font.ttf");
-console.log("[LOAD] Loaded font file to memory.");
+APP.use(express.static(path.join(__dirname, "public")));
 
-APP.get("/font.ttf", (req, res) => {
-  res.setHeader("Cache-Control", "public, max-age=31557600");
-  res.send(fontData);
-});
+// let fontData = fs.readFileSync(__dirname + "/public/font.ttf");
+// console.log("[LOAD] Loaded font file to memory.");
 
-let faviconData = fs.readFileSync(__dirname + "/public/icon.ico");
-console.log("[LOAD] Loaded favicon file to memory.");
+// APP.get("/font.ttf", (req, res) => {
+//   res.setHeader("Cache-Control", "public, max-age=31557600");
+//   res.send(fontData);
+// });
 
-APP.get("/favicon.ico", (req, res) => {
-  res.setHeader("Cache-Control", "public, max-age=31557600");
-  res.send(faviconData);
-});
+// let faviconData = fs.readFileSync(__dirname + "/public/icon.ico");
+// console.log("[LOAD] Loaded favicon file to memory.");
 
-let bgData = fs.readFileSync(__dirname + "/public/bg.png");
-console.log("[LOAD] Loaded background image file to memory.");
+// APP.get("/favicon.ico", (req, res) => {
+//   res.setHeader("Cache-Control", "public, max-age=31557600");
+//   res.send(faviconData);
+// });
 
-APP.get("/bg.png", (req, res) => {
-  res.setHeader("Cache-Control", "public, max-age=31557600");
-  res.send(bgData);
-});
+// let bgData = fs.readFileSync(__dirname + "/public/bg.png");
+// console.log("[LOAD] Loaded background image file to memory.");
+
+// APP.get("/bg.png", (req, res) => {
+//   res.setHeader("Cache-Control", "public, max-age=31557600");
+//   res.send(bgData);
+// });
 
 // ----------------------------------------------
 
