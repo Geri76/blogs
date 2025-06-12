@@ -42,7 +42,7 @@ APP.set("x-powered-by", false);
 let oldStats = StatMan.stats.global_visits;
 setInterval(() => {
   if (StatMan.stats.global_visits != oldStats) {
-    console.log("[STATMAN] Saved stats to disk");
+    console.log(`[STATMAN] [${dateFormatter(new Date())}] Saved stats to disk.`);
     StatMan.writeStatsToDisk();
     oldStats = StatMan.stats.global_visits;
   }
