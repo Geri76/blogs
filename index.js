@@ -2,6 +2,7 @@ const fs = require("fs");
 const express = require("express");
 const showdown = require("showdown");
 const compression = require("compression");
+const helmet = require("helmet");
 const path = require("path");
 const StatManager = require("./stats_manager.js").StatManager;
 
@@ -35,6 +36,25 @@ APP.set("view engine", "ejs");
 
 // Use compression
 APP.use(compression());
+
+// Set Content Security Policy Header
+APP.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'unsafe-inline'"],
+        fontSrc: ["'self'"],
+        mediaSrc: ["'self'"],
+      },
+    },
+  })
+);
+
+// APP.use((req, res, next) => {
+//   res.setHeader("Content-Security-Policy", "default-src 'self'; style-src 'unsafe-inline'; font-src 'self'; media-src 'self'");
+//   next();
+// });
 
 // Disable X-Powered-By header
 APP.set("x-powered-by", false);

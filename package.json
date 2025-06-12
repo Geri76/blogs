@@ -15,6 +15,7 @@
     "compression": "^1.8.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "helmet": "^8.1.0",
     "showdown": "^2.1.0"
   }
 }
