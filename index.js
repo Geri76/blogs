@@ -100,6 +100,8 @@ APP.get("/:user", (req, res) => {
   StatMan.incrementUser(req.params.user);
   StatMan.incrementGlobalVisits();
 
+  console.log(files);
+
   try {
     let d = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "about.md")).toString();
     about = converter.makeHtml(d);
@@ -109,6 +111,7 @@ APP.get("/:user", (req, res) => {
 
   files.forEach((file) => {
     const content = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", file)).toString();
+    const stats = fs.statSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", file));
 
     converter.makeHtml(content);
 
@@ -119,8 +122,11 @@ APP.get("/:user", (req, res) => {
       title: opts.title || file.split(".")[0],
       description: opts.description,
       url: file.split(".")[0],
+      mtime: stats.mtime,
     });
   });
+
+  posts.sort((a, b) => b.mtime - a.mtime);
 
   res.render("user", { user: req.params.user, posts: posts, about: converter.makeHtml(about) });
 });
