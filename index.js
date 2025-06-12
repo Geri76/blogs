@@ -86,6 +86,16 @@ APP.get("/", (req, res) => {
   res.render("index", { users: users });
 });
 
+APP.get("/random", (req, res) => {
+  const users = fs.readdirSync(path.resolve(__dirname, "data", "users"));
+  const user = users[Math.floor(Math.random() * users.length)];
+
+  const posts = fs.readdirSync(path.resolve(__dirname, "data", "users", user, "posts"));
+  const post = posts[Math.floor(Math.random() * posts.length)].split(".")[0];
+
+  res.redirect([user, post].join("/"));
+});
+
 APP.get("/:user", (req, res) => {
   let files = [];
   let about;
@@ -123,6 +133,7 @@ APP.get("/:user", (req, res) => {
       description: opts.description,
       url: file.split(".")[0],
       mtime: stats.mtime,
+      mtime_formatted: dateFormatter(stats.mtime),
     });
   });
 

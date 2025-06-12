@@ -92,7 +92,7 @@
       <span id="title"><a href="/">users</a> &gt; <%= user %></span>
       <div id="posts">
         <% posts.forEach(post=> { %>
-        <a href="/<%= user %>/<%= post.url %>" class="post">
+        <a href="/<%= user %>/<%= post.url %>" class="post" title="<%= post.mtime_formatted %> (UTC)">
           <%= post.title %> <% if (post.description ) { %>
           <span>- <%= post.description %></span>
           <% } %>
