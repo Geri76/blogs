@@ -68,6 +68,14 @@ APP.get("/favicon.ico", (req, res) => {
   res.send(faviconData);
 });
 
+let bgData = fs.readFileSync(__dirname + "/public/bg.png");
+console.log("[LOAD] Loaded background image file to memory.");
+
+APP.get("/bg.png", (req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=31557600");
+  res.send(bgData);
+});
+
 // ----------------------------------------------
 
 APP.get("/", (req, res) => {
