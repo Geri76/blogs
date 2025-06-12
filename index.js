@@ -26,7 +26,7 @@ const converter = new showdown.Converter({
 // Date formatting function
 function dateFormatter(date) {
   let d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
+  return `${d.getFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}:${String(d.getUTCSeconds()).padStart(2, "0")}`;
 }
 
 // Set EmbeddedJS as view engine
@@ -42,7 +42,7 @@ APP.set("x-powered-by", false);
 let oldStats = StatMan.stats.global_visits;
 setInterval(() => {
   if (StatMan.stats.global_visits != oldStats) {
-    console.log(`[STATMAN] [${dateFormatter(new Date())}] Saved stats to disk.`);
+    console.log(`[STATMAN] [${dateFormatter(new Date())} UTC] Saved stats to disk.`);
     StatMan.writeStatsToDisk();
     oldStats = StatMan.stats.global_visits;
   }
