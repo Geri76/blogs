@@ -1,45 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= type %> not found</title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    <%= type %> not found
-  </title>
+    <%- include('partials/bg_anim') %>
+    <style>
+      @font-face {
+        font-family: "font";
+        font-display: swap;
+        src: url("/font.ttf");
+      }
 
-  <style>
-    @font-face {
-      font-family: "font";
-      font-display: swap;
-      src: url("/font.ttf");
-    }
+      * {
+        font-family: "font";
+      }
 
-    * {
-      font-family: "font";
-    }
+      body {
+        background-color: #171c20;
+        background-image: url("/bg.png");
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100dvw;
+        height: 100dvh;
+      }
 
-    body {
-      background-color: #212930;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100dvw;
-      height: 100dvh;
-    }
+      span {
+        color: #e75a7c;
+        font-size: 10dvh;
+      }
+    </style>
+  </head>
 
-    span {
-      color: #E75A7C;
-      font-size: 10dvh;
-    }
-  </style>
-</head>
-
-<body>
-  <span>
-    <%= type %> not found
-  </span>
-</body>
-
+  <body>
+    <span> <%= type %> not found </span>
+  </body>
 </html>

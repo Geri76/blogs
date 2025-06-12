@@ -1,98 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="<%- title %>" />
+    <title><%- title %></title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="<%- title %>">
-  <title><%- title %></title>
+    <%- include('partials/bg_anim') %>
+    <style>
+      @font-face {
+        font-family: "font";
+        font-display: swap;
+        src: url("/font.ttf");
+      }
 
-  <style>
-    @font-face {
-      font-family: "font";
-      font-display: swap;
-      src: url("/font.ttf");
-    }
+      * {
+        font-family: "font";
+      }
 
-    * {
-      font-family: "font";
-    }
+      a {
+        color: inherit;
+      }
 
-    a {
-      color: inherit;
-    }
-
-    body {
-      background-color: #171c20;
-      background-image: url("/bg.png");
-      display: flex;
-      justify-content: center;
-      margin: 0;
-    }
-
-    #title {
-      color: #6BD425;
-      font-size: 2rem;
-      margin: 0.5rem 0 0.5rem 0;
-    }
-
-    #date {
-      color: #F2AF29;
-      padding: 0 0 0.5rem 0.5rem;
-      box-sizing: border-box;
-      width: 100%;
-      text-align: left;
-      font-size: 1.25rem;
-    }
-
-    #content {
-      background-color: #2C363F;
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 1rem 0 3rem 0;
-      outline: #495969 3px solid;
-    }
-
-    #post-content {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      padding: 1rem;
-      background-color: #192025;
-      box-sizing: border-box;
-      gap: 1rem;
-      color: #F18F01;
-    }
-
-    @media (max-width: 768px) {
-      #content {
-        width: 90%;
+      body {
+        background-color: #171c20;
+        background-image: url("/bg.png");
+        display: flex;
+        justify-content: center;
+        margin: 0;
       }
 
       #title {
-        font-size: 1.5rem;
+        color: #6bd425;
+        font-size: 2rem;
+        margin: 0.5rem 0 0.5rem 0;
       }
 
       #date {
-        font-size: 1rem;
-        text-align: center;
+        color: #f2af29;
+        padding: 0 0 0.5rem 0.5rem;
+        box-sizing: border-box;
+        width: 100%;
+        text-align: left;
+        font-size: 1.25rem;
       }
-    }
-  </style>
-  <%- include('partials/md') %>
-</head>
 
-<body>
-  <div id="content">
-    <span id="title"><a href="/">users</a> &gt; <a href="/<%- user %>"><%- user %></a> &gt; <%- title %></span>
-    <span id="date">
-      Last Modified: <%= modify_date %> (UTC)
-    </span>
-    <div class="markdown-body"><%- data %></div>
-  </div>
-  <%- include('partials/footer') %>
-</body>
+      #content {
+        background-color: #2c363f;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 1rem 0 3rem 0;
+        outline: #495969 3px solid;
+      }
 
+      #post-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        background-color: #192025;
+        box-sizing: border-box;
+        gap: 1rem;
+        color: #f18f01;
+      }
+
+      @media (max-width: 768px) {
+        #content {
+          width: 90%;
+        }
+
+        #title {
+          font-size: 1.5rem;
+        }
+
+        #date {
+          font-size: 1rem;
+          text-align: center;
+        }
+      }
+    </style>
+    <%- include('partials/md') %>
+  </head>
+
+  <body>
+    <div id="content">
+      <span id="title"><a href="/">users</a> &gt; <a href="/<%- user %>"><%- user %></a> &gt; <%- title %></span>
+      <span id="date"> Last Modified: <%= modify_date %> (UTC) </span>
+      <div class="markdown-body"><%- data %></div>
+    </div>
+    <%- include('partials/footer') %>
+  </body>
 </html>

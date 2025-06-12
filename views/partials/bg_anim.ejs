@@ -1,0 +1,17 @@
+<style>
+  @keyframes bgScroll {
+    0% {
+      background-position: 0 0px;
+    }
+
+    100% {
+      background-position: 0 4px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    body {
+      animation: bgScroll 0.5s infinite linear;
+    }
+  }
+</style>
