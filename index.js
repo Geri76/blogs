@@ -46,6 +46,7 @@ APP.use(
         styleSrc: ["'unsafe-inline'"],
         fontSrc: ["'self'"],
         mediaSrc: ["'self'"],
+        imgSrc: ["*"],
       },
     },
   })
@@ -120,6 +121,11 @@ APP.get("/random", (req, res) => {
 });
 
 APP.get("/:user", (req, res) => {
+  if (!/^[A-Za-z0-9]+$/.test(req.params.user)) {
+    res.status(404).render("not_found", { type: "user" });
+    return;
+  }
+
   let files = [];
   let about;
 
@@ -164,7 +170,7 @@ APP.get("/:user", (req, res) => {
 });
 
 APP.get("/:user/:post_id", (req, res) => {
-  if ((!/^[A-Za-z0-9]+$/.test(req.params.user), !/^[A-Za-z0-9]+$/.test(req.params.post_id))) {
+  if ((!/^[A-Za-z0-9]+$/.test(req.params.user), !/^[A-Za-z0-9-]+$/.test(req.params.post_id))) {
     res.status(404).render("not_found", { type: "user" });
     return;
   }
@@ -188,6 +194,22 @@ APP.get("/:user/:post_id", (req, res) => {
   let opts = converter.getMetadata();
 
   res.render("post", { user: req.params.user, title: opts.title || req.params.post_id, modify_date: dateFormatter(modifyDate), data: convertedData });
+});
+
+APP.get("/:user/files/:file_name", (req, res) => {
+  if ((!/^[A-Za-z0-9]+$/.test(req.params.user), !/^[A-Za-z0-9-]+$/.test(req.params.post_id), /^[A-Za-z0-9-]+$/.test(req.params.file_name))) {
+    res.status(404).render("not_found", { type: "user" });
+    return;
+  }
+
+  let filePath = path.resolve(__dirname, "data", "users", req.params.user, "files", req.params.file_name);
+
+  if (!fs.existsSync(filePath)) {
+    res.status(404).render("not_found", { type: "file" });
+    return;
+  }
+
+  res.sendFile(filePath);
 });
 
 APP.listen(PORT, () => {
