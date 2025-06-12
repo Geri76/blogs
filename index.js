@@ -6,7 +6,7 @@ const path = require("path");
 const StatManager = require("./stats_manager.js").StatManager;
 
 // Statistics Manager
-const StatMan = new StatManager("./stats.json");
+const StatMan = new StatManager("./data/stats.json");
 
 const APP = express();
 const PORT = 3000;
