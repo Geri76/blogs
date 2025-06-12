@@ -10,6 +10,7 @@ const StatMan = new StatManager("./data/stats.json");
 
 const APP = express();
 const PORT = 3000;
+const STATMAN_INTERVAL = 1000;
 
 // Markdown to HTML converter
 const converter = new showdown.Converter({
@@ -46,7 +47,7 @@ setInterval(() => {
     StatMan.writeStatsToDisk();
     oldStats = StatMan.stats.global_visits;
   }
-}, 1000);
+}, STATMAN_INTERVAL);
 
 // ----------------------------------------------
 
