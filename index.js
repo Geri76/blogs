@@ -13,6 +13,8 @@ const APP = express();
 const PORT = 3000;
 const STATMAN_INTERVAL = 1000;
 
+const BLOCKED_IMAGE_TYPES_FROM_REMOTE = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "tiff", "tif", "heic", "heif", "avif", "ico", "jpe", "jp2", "jxr", "ras", "dds", "exr"];
+
 // Markdown to HTML converter
 const converter = new showdown.Converter({
   tables: true,
@@ -51,11 +53,6 @@ APP.use(
     },
   })
 );
-
-// APP.use((req, res, next) => {
-//   res.setHeader("Content-Security-Policy", "default-src 'self'; style-src 'unsafe-inline'; font-src 'self'; media-src 'self'");
-//   next();
-// });
 
 // Disable X-Powered-By header
 APP.set("x-powered-by", false);
@@ -197,8 +194,8 @@ APP.get("/:user/:post_id", (req, res) => {
 });
 
 APP.get("/:user/files/:file_name", (req, res) => {
-  // Disallow file access from different source :P
-  if (req.headers["sec-fetch-site"] == "none" || req.headers["sec-fetch-dest"] != "image") {
+  // Disallow image access from different source :P
+  if ((req.headers["sec-fetch-site"] == "none" || req.headers["sec-fetch-dest"] != "image") && BLOCKED_IMAGE_TYPES_FROM_REMOTE.some((type) => req.params.file_name.endsWith(type))) {
     res.status(404).render("error", { type: "file not accessible" });
     return;
   }
