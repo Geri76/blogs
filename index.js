@@ -122,7 +122,7 @@ APP.get("/random", (req, res) => {
 
 APP.get("/:user", (req, res) => {
   if (!/^[A-Za-z0-9]+$/.test(req.params.user)) {
-    res.status(404).render("not_found", { type: "user" });
+    res.status(404).render("error", { type: "user not found" });
     return;
   }
 
@@ -132,7 +132,7 @@ APP.get("/:user", (req, res) => {
   try {
     files = fs.readdirSync(path.resolve(__dirname, "data", "users", req.params.user, "posts"));
   } catch {
-    res.status(404).render("not_found", { type: "user" });
+    res.status(404).render("error", { type: "user not found" });
     return;
   }
 
@@ -171,7 +171,7 @@ APP.get("/:user", (req, res) => {
 
 APP.get("/:user/:post_id", (req, res) => {
   if ((!/^[A-Za-z0-9]+$/.test(req.params.user), !/^[A-Za-z0-9-]+$/.test(req.params.post_id))) {
-    res.status(404).render("not_found", { type: "user" });
+    res.status(404).render("error", { type: "user not found" });
     return;
   }
 
@@ -182,7 +182,7 @@ APP.get("/:user/:post_id", (req, res) => {
     content = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", req.params.post_id + ".md")).toString();
     modifyDate = fs.statSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", req.params.post_id + ".md")).mtime;
   } catch {
-    res.status(404).render("not_found", { type: "post" });
+    res.status(404).render("error", { type: "post not found" });
     return;
   }
 
@@ -197,15 +197,21 @@ APP.get("/:user/:post_id", (req, res) => {
 });
 
 APP.get("/:user/files/:file_name", (req, res) => {
+  // Disallow file access from different source :P
+  if (req.headers["sec-fetch-site"] == "none" || req.headers["sec-fetch-dest"] != "image") {
+    res.status(404).render("error", { type: "file not accessible" });
+    return;
+  }
+
   if ((!/^[A-Za-z0-9]+$/.test(req.params.user), !/^[A-Za-z0-9-]+$/.test(req.params.post_id), /^[A-Za-z0-9-]+$/.test(req.params.file_name))) {
-    res.status(404).render("not_found", { type: "user" });
+    res.status(404).render("error", { type: "user" });
     return;
   }
 
   let filePath = path.resolve(__dirname, "data", "users", req.params.user, "files", req.params.file_name);
 
   if (!fs.existsSync(filePath)) {
-    res.status(404).render("not_found", { type: "file" });
+    res.status(404).render("error", { type: "file not found" });
     return;
   }
 
