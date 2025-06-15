@@ -184,6 +184,7 @@ APP.get("/:user/:post_id", (req, res) => {
   }
 
   StatMan.incrementPost(req.params.user, req.params.post_id);
+  StatMan.incrementUser(req.params.user);
   StatMan.incrementGlobalVisits();
 
   let convertedData = converter.makeHtml(content);

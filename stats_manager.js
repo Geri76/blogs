@@ -43,8 +43,6 @@ class StatManager {
   }
 
   incrementPost(user, postId) {
-    this.incrementUser(user);
-
     let u = this.stats.users.find((x) => x.name == user);
     let p = this.stats.users.find((x) => x.name == user && x.posts.find((x) => x.id == postId));
 
@@ -53,6 +51,8 @@ class StatManager {
         id: postId,
         visits: 1,
       });
+    } else {
+      u.posts.find((x) => x.id == postId).visits++;
     }
   }
 }
