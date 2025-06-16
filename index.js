@@ -51,10 +51,11 @@ APP.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        styleSrc: ["'unsafe-inline'"],
+        styleSrc: ["'unsafe-inline'", "'self'"],
         fontSrc: ["'self'"],
         mediaSrc: ["'self'"],
         imgSrc: ["*"],
+        scriptSrc: ["'unsafe-inline'", "'self'"],
       },
     },
   })
