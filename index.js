@@ -6,6 +6,12 @@ const helmet = require("helmet");
 const path = require("path");
 const StatManager = require("./stats_manager.js").StatManager;
 
+// Create data folder if it does not exist already
+if (!fs.existsSync("data")) {
+  fs.mkdirSync("data");
+  fs.mkdirSync("data/users");
+}
+
 // Statistics Manager
 const StatMan = new StatManager("./data/stats.json");
 
