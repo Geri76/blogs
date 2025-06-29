@@ -115,11 +115,15 @@ APP.get("/", (req, res) => {
 });
 
 APP.get("/random", (req, res) => {
-  const users = fs.readdirSync(path.resolve(__dirname, "data", "users"));
-  const user = users[Math.floor(Math.random() * users.length)];
+  try {
+    const users = fs.readdirSync(path.resolve(__dirname, "data", "users"));
+    const user = users[Math.floor(Math.random() * users.length)];
 
-  const posts = fs.readdirSync(path.resolve(__dirname, "data", "users", user, "posts"));
-  const post = posts[Math.floor(Math.random() * posts.length)].split(".")[0];
+    const posts = fs.readdirSync(path.resolve(__dirname, "data", "users", user, "posts"));
+    const post = posts[Math.floor(Math.random() * posts.length)].split(".")[0];
+  } catch {
+    res.redirect("/");
+  }
 
   res.redirect([user, post].join("/"));
 });
