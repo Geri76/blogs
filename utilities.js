@@ -1,3 +1,5 @@
+const { isMainThread, parentPort } = require("worker_threads");
+
 // Date formatting function
 function dateFormatter(date) {
   let d = new Date(date);
@@ -63,6 +65,8 @@ function parseColorPlaceholders(text) {
 }
 
 function log(text) {
+  if (!isMainThread) parentPort.postMessage("SUB_LOG");
+
   console.log("\x1b[0m" + parseColorPlaceholders(text) + "\x1b[0m");
 }
 
