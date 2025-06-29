@@ -114,6 +114,16 @@ APP.get("/", (req, res) => {
   res.render("index", { users: users });
 });
 
+APP.get("/about", (req, res) => {
+  StatMan.incrementGlobalVisits();
+
+  const readmeContent = fs.readFileSync(path.resolve(__dirname, "README.md")).toString();
+
+  let convertedData = converter.makeHtml(readmeContent);
+
+  res.render("about", { data: convertedData });
+});
+
 APP.get("/random", (req, res) => {
   try {
     const users = fs.readdirSync(path.resolve(__dirname, "data", "users"));
