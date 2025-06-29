@@ -58,6 +58,12 @@
         gap: 1rem;
       }
 
+      #error {
+        color: #e75a7c;
+        font-size: 1.25rem;
+        text-align: center;
+      }
+
       .post {
         font-size: 1.25rem;
         border-radius: 5px;
@@ -91,7 +97,9 @@
     <div id="content">
       <span id="title"><a href="/">users</a> &gt; <%= user %></span>
       <div id="posts">
-        <% posts.forEach(post=> { %>
+        <% if (posts.length == 0) { %>
+        <span id="error">This user has no posts...</span>
+        <% } %> <% posts.forEach(post=> { %>
         <a href="/<%= user %>/<%= post.url %>" class="post" title="<%= post.mtime_formatted %> (UTC)">
           <%= post.title %> <% if (post.description ) { %>
           <span>- <%= post.description %></span>
