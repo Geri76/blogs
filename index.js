@@ -6,12 +6,6 @@ const helmet = require("helmet");
 const path = require("path");
 const StatManager = require("./stats_manager.js").StatManager;
 
-// Create data folder if it does not exist already
-if (!fs.existsSync("data")) {
-  fs.mkdirSync("data");
-  fs.mkdirSync("data/users");
-}
-
 // Statistics Manager
 const StatMan = new StatManager("./data/stats.json");
 
@@ -238,5 +232,10 @@ APP.get("/:user/files/:file_name", (req, res) => {
 });
 
 APP.listen(PORT, () => {
+  // Create data folder if it does not exist already
+  if (!fs.existsSync(path.resolve(__dirname, "data", "users"))) {
+    fs.mkdirSync(path.resolve(__dirname, "data", "users"), { recursive: true });
+  }
+
   console.log(`\n[SYS] Blogs listening on port ${PORT}\n`);
 });
