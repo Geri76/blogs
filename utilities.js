@@ -63,7 +63,7 @@ function parseColorPlaceholders(text) {
 }
 
 function log(text) {
-  console.log(parseColorPlaceholders(text) + "\x1b[0m");
+  console.log("\x1b[0m" + parseColorPlaceholders(text) + "\x1b[0m");
 }
 
 module.exports = {
