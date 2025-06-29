@@ -242,6 +242,4 @@ APP.listen(PORT, () => {
   log(`\n%a[%lSYS%a] Statman using iterval: %d${STATMAN_INTERVAL}ms`);
   log(`%a[%lSYS%a] Blocked image file extensions: %d${BLOCKED_IMAGE_TYPES_FROM_REMOTE.join("%a, %d")}`);
   log(`%a[%lSYS%a] Blogs listening on port: %d${PORT}\n`);
-
-  // while (true) {}
 });
