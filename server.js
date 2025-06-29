@@ -4,9 +4,10 @@ const showdown = require("showdown");
 const compression = require("compression");
 const helmet = require("helmet");
 const path = require("path");
+const { parentPort } = require("worker_threads");
 
 const StatManager = require("./stats_manager.js").StatManager;
-const log = require("./utilities.js").log;
+const { log, dateFormatter } = require("./utilities.js");
 
 // Statistics Manager
 const StatMan = new StatManager("./data/stats.json");
@@ -28,12 +29,6 @@ const converter = new showdown.Converter({
   emoji: true,
   metadata: true,
 });
-
-// Date formatting function
-function dateFormatter(date) {
-  let d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}:${String(d.getUTCSeconds()).padStart(2, "0")}`;
-}
 
 // Set EmbeddedJS as view engine
 APP.set("view engine", "ejs");
@@ -242,4 +237,6 @@ APP.listen(PORT, () => {
   log(`\n%a[%lSYS%a] Statman using iterval: %d${STATMAN_INTERVAL}ms`);
   log(`%a[%lSYS%a] Blocked image file extensions: %d${BLOCKED_IMAGE_TYPES_FROM_REMOTE.join("%a, %d")}`);
   log(`%a[%lSYS%a] Blogs listening on port: %d${PORT}\n`);
+
+  parentPort.postMessage("SERVER_STARTED");
 });

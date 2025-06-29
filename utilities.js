@@ -1,3 +1,9 @@
+// Date formatting function
+function dateFormatter(date) {
+  let d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}:${String(d.getUTCSeconds()).padStart(2, "0")}`;
+}
+
 function hexToANSI(hex) {
   var r = (hex >> 16) & 255;
   var g = (hex >> 8) & 255;
@@ -6,7 +12,7 @@ function hexToANSI(hex) {
   return `\x1b[38;2;${r};${g};${b}m`;
 }
 
-function log(text) {
+function parseColorPlaceholders(text) {
   const colors = [
     {
       key: "%c",
@@ -33,6 +39,10 @@ function log(text) {
       value: hexToANSI(0xae70ff),
     },
     {
+      key: "%y",
+      value: hexToANSI(0xf5e342),
+    },
+    {
       key: "%r",
       value: "\x1b[0m",
     },
@@ -45,9 +55,15 @@ function log(text) {
     text = text.replaceAll(placeholder, value);
   }
 
-  console.log(text + "\x1b[0m");
+  return text;
+}
+
+function log(text) {
+  console.log(parseColorPlaceholders(text) + "\x1b[0m");
 }
 
 module.exports = {
   log,
+  dateFormatter,
+  parseColorPlaceholders,
 };
