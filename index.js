@@ -4,14 +4,16 @@ const showdown = require("showdown");
 const compression = require("compression");
 const helmet = require("helmet");
 const path = require("path");
+
 const StatManager = require("./stats_manager.js").StatManager;
+const log = require("./utilities.js").log;
 
 // Statistics Manager
 const StatMan = new StatManager("./data/stats.json");
 
 const APP = express();
-const PORT = 3000;
-const STATMAN_INTERVAL = 1000;
+const PORT = 3000 || process.env.PORT;
+const STATMAN_INTERVAL = 1000 || process.env.STATMAN_INTERVAL;
 
 const BLOCKED_IMAGE_TYPES_FROM_REMOTE = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "tiff", "tif", "heic", "heif", "avif", "ico", "jpe", "jp2", "jxr", "ras", "dds", "exr"];
 
@@ -62,7 +64,7 @@ APP.set("x-powered-by", false);
 let oldStats = StatMan.stats.global_visits;
 setInterval(() => {
   if (StatMan.stats.global_visits != oldStats) {
-    console.log(`[STATMAN] [${dateFormatter(new Date())} UTC] Saved stats to disk.`);
+    log(`%a[%lSTATMAN%a] [%b${dateFormatter(new Date())} UTC%a] %dSaved stats to disk.`);
     StatMan.writeStatsToDisk();
     oldStats = StatMan.stats.global_visits;
   }
@@ -237,5 +239,9 @@ APP.listen(PORT, () => {
     fs.mkdirSync(path.resolve(__dirname, "data", "users"), { recursive: true });
   }
 
-  console.log(`\n[SYS] Blogs listening on port ${PORT}\n`);
+  log(`\n%a[%lSYS%a] Statman using iterval: %d${STATMAN_INTERVAL}ms`);
+  log(`%a[%lSYS%a] Blocked image file extensions: %d${BLOCKED_IMAGE_TYPES_FROM_REMOTE.join("%a, %d")}`);
+  log(`%a[%lSYS%a] Blogs listening on port: %d${PORT}\n`);
+
+  // while (true) {}
 });
