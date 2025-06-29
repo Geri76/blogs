@@ -43,6 +43,10 @@ function parseColorPlaceholders(text) {
       value: hexToANSI(0xf5e342),
     },
     {
+      key: "%t",
+      value: hexToANSI(0xb0f542),
+    },
+    {
       key: "%r",
       value: "\x1b[0m",
     },
