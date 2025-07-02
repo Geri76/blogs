@@ -122,11 +122,11 @@ APP.get("/random", (req, res) => {
 
     const posts = fs.readdirSync(path.resolve(__dirname, "data", "users", user, "posts"));
     const post = posts[Math.floor(Math.random() * posts.length)].split(".")[0];
+
+    res.redirect([user, post].join("/"));
   } catch {
     res.redirect("/");
   }
-
-  res.redirect([user, post].join("/"));
 });
 
 APP.get("/:user", (req, res) => {
