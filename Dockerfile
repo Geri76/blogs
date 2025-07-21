@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN npm ci --only=production --no-audit --no-fund --loglevel verbose
 
 EXPOSE 3000
 
