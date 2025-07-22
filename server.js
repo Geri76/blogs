@@ -13,8 +13,8 @@ const { log, dateFormatter } = require("./utilities.js");
 const StatMan = new StatManager("./data/stats.json");
 
 const APP = express();
-const PORT = 3000 || process.env.PORT;
-const STATMAN_INTERVAL = 1000 || process.env.STATMAN_INTERVAL;
+const PORT = process.env.PORT || 3000;
+const STATMAN_INTERVAL = process.env.STATMAN_INTERVAL || 1000;
 
 const BLOCKED_IMAGE_TYPES_FROM_REMOTE = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "tiff", "tif", "heic", "heif", "avif", "ico", "jpe", "jp2", "jxr", "ras", "dds", "exr"];
 
