@@ -73,10 +73,30 @@
         color: #e75a7c;
         text-decoration: none;
         transition: 0.2s;
+        position: relative;
       }
 
       .post:hover {
         outline: 3px solid #009fb7;
+      }
+
+      .pin {
+        position: absolute;
+        top: -0.625rem;
+        right: -0.625rem;
+        outline: 3px solid #006372;
+        background-color: #192025;
+        aspect-ratio: 1/1;
+        width: 1.25rem;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .pin > img {
+        width: 75%;
+        transform: rotateZ(45deg);
       }
 
       @media (max-width: 768px) {
@@ -97,9 +117,17 @@
     <div id="content">
       <span id="title"><a href="/">users</a> &gt; <%= user %></span>
       <div id="posts">
-        <% if (posts.length == 0) { %>
+        <% if (posts.length == 0 && pinned_posts.length == 0) { %>
         <span id="error">This user has no posts...</span>
-        <% } %> <% posts.forEach(post=> { %>
+        <% } %>
+        <% pinned_posts.forEach(post=> { %>
+          <a href="/<%= user %>/<%= post.url %>" class="post" title="<%= post.mtime_formatted %> (UTC)">
+          <span class="pin"><img src="/pinned.svg" alt="Pinned Post"></span>
+          <%= post.title %> <% if (post.description ) { %>
+          <span>- <%= post.description %></span>
+          <% } %>
+        <% }) %>
+        <% posts.forEach(post=> { %>
         <a href="/<%= user %>/<%= post.url %>" class="post" title="<%= post.mtime_formatted %> (UTC)">
           <%= post.title %> <% if (post.description ) { %>
           <span>- <%= post.description %></span>

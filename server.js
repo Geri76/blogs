@@ -155,6 +155,7 @@ APP.get("/:user", (req, res) => {
   } catch {}
 
   let posts = [];
+  let pinnedPosts = [];
 
   files.forEach((file) => {
     const content = fs.readFileSync(path.resolve(__dirname, "data", "users", req.params.user, "posts", file)).toString();
@@ -164,7 +165,7 @@ APP.get("/:user", (req, res) => {
 
     let opts = converter.getMetadata();
 
-    posts.push({
+    let post = {
       user: req.params.user,
       title: opts.title || file.split(".")[0],
       description: opts.description,
@@ -172,12 +173,16 @@ APP.get("/:user", (req, res) => {
       mtime: stats.mtime,
       btime: stats.birthtime,
       mtime_formatted: dateFormatter(stats.mtime),
-    });
+    };
+
+    if (opts.pinned != undefined) pinnedPosts.push(post);
+    else posts.push(post);
   });
 
   posts.sort((a, b) => b.btime - a.btime);
+  pinnedPosts.sort((a, b) => b.btime - a.btime);
 
-  res.render("user", { user: req.params.user, posts: posts, about: converter.makeHtml(about) });
+  res.render("user", { user: req.params.user, posts: posts, pinned_posts: pinnedPosts, about: converter.makeHtml(about) });
 });
 
 APP.get("/:user/:post_id", (req, res) => {
