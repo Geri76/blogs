@@ -170,11 +170,12 @@ APP.get("/:user", (req, res) => {
       description: opts.description,
       url: file.split(".")[0],
       mtime: stats.mtime,
+      btime: stats.birthtime,
       mtime_formatted: dateFormatter(stats.mtime),
     });
   });
 
-  posts.sort((a, b) => b.mtime - a.mtime);
+  posts.sort((a, b) => b.btime - a.btime);
 
   res.render("user", { user: req.params.user, posts: posts, about: converter.makeHtml(about) });
 });
