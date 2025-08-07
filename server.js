@@ -116,17 +116,18 @@ APP.get("/about", (req, res) => {
 });
 
 APP.get("/random", (req, res) => {
-  try {
+  let posts = [];
+  let user = "";
+
+  while (posts.length == 0) {
     const users = fs.readdirSync(path.resolve(__dirname, "data", "users"));
-    const user = users[Math.floor(Math.random() * users.length)];
-
-    const posts = fs.readdirSync(path.resolve(__dirname, "data", "users", user, "posts"));
-    const post = posts[Math.floor(Math.random() * posts.length)].split(".")[0];
-
-    res.redirect([user, post].join("/"));
-  } catch {
-    res.redirect("/");
+    user = users[Math.floor(Math.random() * users.length)];
+    posts = fs.readdirSync(path.resolve(__dirname, "data", "users", user, "posts"));
   }
+
+  const post = posts[Math.floor(Math.random() * posts.length)].split(".")[0];
+
+  res.redirect([user, post].join("/"));
 });
 
 APP.get("/:user", (req, res) => {
