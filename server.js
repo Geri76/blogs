@@ -130,6 +130,12 @@ APP.get("/random", (req, res) => {
   res.redirect([user, post].join("/"));
 });
 
+APP.get("/stats", (req, res) => {
+  StatMan.incrementGlobalVisits();
+
+  res.render("stats", { stats: StatMan.stats });
+});
+
 APP.get("/:user", (req, res) => {
   if (!/^[A-Za-z0-9]+$/.test(req.params.user)) {
     res.status(404).render("error", { type: "user not found" });
