@@ -80,7 +80,7 @@
         outline: 3px solid #009fb7;
       }
 
-      .pin {
+      .post > .pin {
         position: absolute;
         top: -0.625rem;
         right: -0.625rem;
@@ -94,7 +94,11 @@
         align-items: center;
       }
 
-      .pin > img {
+      .post:hover > .pin {
+        outline: 3px solid #009fb7;
+      }
+
+      .post > .pin > img {
         width: 75%;
         transform: rotateZ(45deg);
       }
